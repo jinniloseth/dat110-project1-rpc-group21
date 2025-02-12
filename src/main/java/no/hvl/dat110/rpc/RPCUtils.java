@@ -68,7 +68,7 @@ public class RPCUtils {
 		return encoded;
 	}
 
-//	// convert byte array to a String
+	// convert byte array to a String
 //	public static String unmarshallString(byte[] data) {
 //		
 //		// TODO - START 
@@ -85,24 +85,30 @@ public class RPCUtils {
 //	    return new String(strBytes); 
 //	}
 	
+
 	public static String unmarshallString(byte[] data) {
 	    if (data == null || data.length < 1) {
 	        throw new IllegalArgumentException("Invalid string message: empty or null");
 	    }
 
-	    int length = data[0];
-	    
+	    // Read the first byte as the length of the string (ensuring it's unsigned)
+	    int length = data[0] & 0xFF;  
+
 	    System.out.println("DEBUG: Expected length: " + length + ", Actual data length: " + data.length);
 
+	    // Validate that the data array is large enough to contain the full string
 	    if (length > data.length - 1) {
 	        throw new IllegalArgumentException("Invalid string length: " + length + " for data size: " + data.length + " | Data: " + Arrays.toString(data));
 	    }
 
+	    // Extract the actual string bytes
 	    byte[] strBytes = new byte[length];
 	    System.arraycopy(data, 1, strBytes, 0, length);
 
+	    // Convert the byte array into a string
 	    return new String(strBytes);
 	}
+
 
 
 	

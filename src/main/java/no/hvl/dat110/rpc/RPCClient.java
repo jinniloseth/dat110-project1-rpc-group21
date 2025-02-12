@@ -66,20 +66,34 @@ public class RPCClient {
 		 */
 
 		if (connection == null) {
-			throw new IllegalStateException("RPCClient: Connection is not established. Call connect() first.");
-		}
+	        throw new IllegalStateException("RPCClient: Connection is not established. Call connect() first.");
+	    }
 
-		byte[] request = RPCUtils.encapsulate(rpcid, param);
+	    // Step 1: Encapsulate the RPC request
+	    byte[] request = RPCUtils.encapsulate(rpcid, param);
+	    System.out.println("DEBUG: Sending request: " + Arrays.toString(request));  // Debug sent data
 
-		connection.send(new Message(request));
+	    // Step 2: Send the request
+	    connection.send(new Message(request));
 
-		Message reply = connection.receive();
+	    // Step 3: Receive the response
+	    Message reply = connection.receive();
+	    
+	    // Step 4: Handle potential null reply
+	    if (reply == null || reply.getData() == null) {
+	        throw new IllegalStateException("RPCClient: Received null response from server.");
+	    }
 
-		returnval = RPCUtils.decapsulate(reply.getData());
+	    System.out.println("DEBUG: Received response: " + Arrays.toString(reply.getData()));  // Debug received data
+
+	    // Step 5: Decapsulate the reply
+	    returnval = RPCUtils.decapsulate(reply.getData());
 
 		// TODO - END
 
 		return returnval;
 	}
 
+	
+	
 }
