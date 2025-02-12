@@ -2,6 +2,7 @@ package no.hvl.dat110.rpc;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+
 import no.hvl.dat110.TODO;
 
 public class RPCUtils {
@@ -14,8 +15,12 @@ public class RPCUtils {
 		
 		// Encapsulate the rpcid and payload in a byte array according to the RPC message syntax / format
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		rpcmsg = new byte[payload.length + 1];
+		
+		rpcmsg[0] = rpcid;
+		
+		System.arraycopy(payload, 0, rpcmsg, 1, payload.length);
+
 		
 		// TODO - END
 		
@@ -30,8 +35,10 @@ public class RPCUtils {
 		
 		// Decapsulate the rpcid and payload in a byte array according to the RPC message syntax
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		payload = new byte[rpcmsg.length-1];
+		
+		System.arraycopy(rpcmsg, 1, payload, 0, payload.length);
+
 		
 		// TODO - END
 		
@@ -42,32 +49,64 @@ public class RPCUtils {
 	// convert String to byte array
 	public static byte[] marshallString(String str) {
 		
-		byte[] encoded = null;
-		
 		// TODO - START 
+	
+		byte[] data = str.getBytes();
+		int length = data.length;
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		System.out.println("byte størrelse: " + length);
+		System.out.println("faktisk lengde: " + str.length());
+		
+		byte[] encoded = new byte[length + 1];
+		
+		encoded[0] = (byte) length;
+		
+		System.arraycopy(data, 0, encoded, 1, length);
 		
 		// TODO - END
 		
 		return encoded;
 	}
 
-	// convert byte array to a String
+//	// convert byte array to a String
+//	public static String unmarshallString(byte[] data) {
+//		
+//		// TODO - START 
+//		
+//		int length = data[0];
+//	   
+//		byte[] strBytes = new byte[length];
+//		
+//	    
+//	    System.arraycopy(data, 1, strBytes, 0, length);  
+//
+//		// TODO - END
+//	    
+//	    return new String(strBytes); 
+//	}
+	
 	public static String unmarshallString(byte[] data) {
-		
-		String decoded = null; 
-		
-		// TODO - START 
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - END
-		
-		return decoded;
+	    if (data == null || data.length < 1) {
+	        throw new IllegalArgumentException("Invalid string message: empty or null");
+	    }
+
+	    int length = data[0];
+	    
+	    System.out.println("DEBUG: Expected length: " + length + ", Actual data length: " + data.length);
+
+	    if (length > data.length - 1) {
+	        throw new IllegalArgumentException("Invalid string length: " + length + " for data size: " + data.length + " | Data: " + Arrays.toString(data));
+	    }
+
+	    byte[] strBytes = new byte[length];
+	    System.arraycopy(data, 1, strBytes, 0, length);
+
+	    return new String(strBytes);
 	}
+
+
+	
+	
 	
 	public static byte[] marshallVoid() {
 		
@@ -75,9 +114,10 @@ public class RPCUtils {
 		
 		// TODO - START 
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-				
+		encoded = new byte[1];
+		
+		encoded[0] = 0;
+		
 		// TODO - END
 		
 		return encoded;
@@ -85,13 +125,15 @@ public class RPCUtils {
 	}
 	
 	public static void unmarshallVoid(byte[] data) {
+		//TODO
 		
-		// TODO
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-		
+	    System.out.println("Received void message: " + Arrays.toString(data)); // Debugging output
+
+	    if (data == null || data.length != 1 || data[0] != 0) {
+	        
+	    }
 	}
+
 
 	// convert boolean to a byte array representation
 	public static byte[] marshallBoolean(boolean b) {
@@ -122,8 +164,11 @@ public class RPCUtils {
 		
 		// TODO - START 
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		ByteBuffer buffer = ByteBuffer.allocate(x);
+		
+		buffer.putInt(x);
+		
+		encoded = buffer.array();
 		
 		// TODO - END
 		
@@ -136,9 +181,11 @@ public class RPCUtils {
 		int decoded = 0;
 		
 		// TODO - START 
+	
+		ByteBuffer buffer = ByteBuffer.wrap(data);
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		decoded = buffer.getInt();
+	
 		
 		// TODO - END
 		

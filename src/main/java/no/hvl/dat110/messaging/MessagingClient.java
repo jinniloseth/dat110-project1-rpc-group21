@@ -1,6 +1,7 @@
 package no.hvl.dat110.messaging;
 
 
+import java.io.IOException;
 import java.net.Socket;
 
 import no.hvl.dat110.TODO;
@@ -17,23 +18,29 @@ public class MessagingClient {
 		this.server = server;
 		this.port = port;
 	}
-	
-	// setup of a messaging connection to a messaging server
-	public MessageConnection connect () {
 
-		// client-side socket for underlying TCP connection to messaging server
-		Socket clientSocket;
+	public MessageConnection connect() {
 
-		MessageConnection connection = null;
-		
-		// TODO - START
-		// connect to messaging server using a TCP socket
-		// create and return a corresponding messaging connection
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - END
-		return connection;
+	    // Client-side socket for the TCP connection
+	    Socket clientSocket;
+	    MessageConnection connection = null;
+
+	    try {
+	        // Establish TCP connection to the messaging server
+	        clientSocket = new Socket(server, port);
+
+	        // Create a MessageConnection object using the connected socket
+	        connection = new MessageConnection(clientSocket);
+	    } catch (IOException e) {
+	        // Handle connection errors
+	        System.err.println("Error connecting to the messaging server: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    // Return the established messaging connection (null if failed)
+	    return connection;
 	}
+
+	
+	
 }

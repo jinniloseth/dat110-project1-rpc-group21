@@ -27,6 +27,7 @@ public class RPCServer {
 		
 		// the stop RPC method is built into the server
 		RPCRemoteImpl rpcstop = new RPCServerStopImpl(RPCCommon.RPIDSTOP,this);
+		register(RPCCommon.RPIDSTOP, rpcstop);
 		
 		System.out.println("RPC SERVER RUN - Services: " + services.size());
 			
@@ -48,8 +49,26 @@ public class RPCServer {
 		   // - invoke the method
 		   // - send back the message containing RPC reply
 			
-		   if (true)
-				throw new UnsupportedOperationException(TODO.method());
+		   requestmsg = connection.receive();
+		   
+		   byte[] requestdata = requestmsg.getData();
+		   
+		   rpcid = requestdata[0];  
+		   
+		   
+
+		   RPCRemoteImpl method = services.get(rpcid);
+
+		   if (method == null) {
+	            System.out.println("RPC method not found: " + rpcid);
+	            continue;  // Skip if method is not found
+	        }
+
+		   byte[] replydata = method.invoke(requestdata);
+
+		   replymsg = new Message(replydata);
+		   
+	       connection.send(replymsg);
 		   
 		   // TODO - END
 

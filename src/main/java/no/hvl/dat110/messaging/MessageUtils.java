@@ -8,7 +8,7 @@ public class MessageUtils {
 
 	public static final int SEGMENTSIZE = 128;
 
-	public static int MESSAGINGPORT = 8080;
+	public static int MESSAGINGPORT = 8081;
 	public static String MESSAGINGHOST = "localhost";
 
 	public static byte[] encapsulate(Message message) {
@@ -21,28 +21,43 @@ public class MessageUtils {
 		// encapulate/encode the payload data of the message and form a segment
 		// according to the segment format for the messaging layer
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-			
-		// TODO - END
+		data = message.getData();
+		
+		 if (data == null) {
+		        throw new IllegalArgumentException("Message data cannot be null");
+		 }
+		
+		segment = new byte[SEGMENTSIZE];
+		
+		segment[0] = (byte) message.getData().length;
+		
+		System.arraycopy(data, 0, segment, 1, data.length);
+		
 		return segment;
 		
 	}
 
 	public static Message decapsulate(byte[] segment) {
-
+		
 		Message message = null;
-		
-		// TODO - START
-		// decapsulate segment and put received payload data into a message
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - END
-		
-		return message;
-		
+	    
+	    if (segment == null) {
+	        throw new IllegalArgumentException("Segment cannot be null");
+	    }
+
+	    int length = segment[0];
+
+	    byte[] payload = new byte[length];
+
+	    System.arraycopy(segment, 1, payload, 0, length);
+	    
+	    message = new Message(payload);
+
+	    return message;
 	}
+	
+
+
+
 	
 }
