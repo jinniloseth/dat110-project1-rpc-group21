@@ -49,64 +49,29 @@ public class RPCUtils {
 	// convert String to byte array
 	public static byte[] marshallString(String str) {
 		
+		byte[] encoded;
+		
 		// TODO - START 
-	
-		byte[] data = str.getBytes();
-		int length = data.length;
 		
-		System.out.println("byte størrelse: " + length);
-		System.out.println("faktisk lengde: " + str.length());
+		encoded = new byte[str.length()];
 		
-		byte[] encoded = new byte[length + 1];
-		
-		encoded[0] = (byte) length;
-		
-		System.arraycopy(data, 0, encoded, 1, length);
+		for(int i = 0; i < str.length(); i++) {
+			encoded[i] = (byte) str.charAt(i);
+		}
 		
 		// TODO - END
 		
 		return encoded;
 	}
 
-	// convert byte array to a String
-//	public static String unmarshallString(byte[] data) {
-//		
-//		// TODO - START 
-//		
-//		int length = data[0];
-//	   
-//		byte[] strBytes = new byte[length];
-//		
-//	    
-//	    System.arraycopy(data, 1, strBytes, 0, length);  
-//
-//		// TODO - END
-//	    
-//	    return new String(strBytes); 
-//	}
-	
 
 	public static String unmarshallString(byte[] data) {
-	    if (data == null || data.length < 1) {
-	        throw new IllegalArgumentException("Invalid string message: empty or null");
-	    }
-
-	    // Read the first byte as the length of the string (ensuring it's unsigned)
-	    int length = data[0] & 0xFF;  
-
-	    System.out.println("DEBUG: Expected length: " + length + ", Actual data length: " + data.length);
-
-	    // Validate that the data array is large enough to contain the full string
-	    if (length > data.length - 1) {
-	        throw new IllegalArgumentException("Invalid string length: " + length + " for data size: " + data.length + " | Data: " + Arrays.toString(data));
-	    }
-
-	    // Extract the actual string bytes
-	    byte[] strBytes = new byte[length];
-	    System.arraycopy(data, 1, strBytes, 0, length);
+		String decoded;
+		
+	    decoded = new String(Arrays.copyOfRange(data, 0, data.length));
 
 	    // Convert the byte array into a string
-	    return new String(strBytes);
+	    return decoded;
 	}
 
 
@@ -133,11 +98,6 @@ public class RPCUtils {
 	public static void unmarshallVoid(byte[] data) {
 		//TODO
 		
-	    System.out.println("Received void message: " + Arrays.toString(data)); // Debugging output
-
-	    if (data == null || data.length != 1 || data[0] != 0) {
-	        
-	    }
 	}
 
 

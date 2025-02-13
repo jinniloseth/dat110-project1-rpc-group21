@@ -54,19 +54,28 @@ public class RPCServer {
 		   byte[] requestdata = requestmsg.getData();
 		   
 		   rpcid = requestdata[0];  
-		   
-		   
 
 		   RPCRemoteImpl method = services.get(rpcid);
 
+		   byte[] rpcreply;
+		   
 		   if (method == null) {
 	            System.out.println("RPC method not found: " + rpcid);
-	            continue;  // Skip if method is not found
+	            rpcreply = new byte[0];
+	        } else {
+	        	
+	        	//decapsulate
+	        	byte[] params = RPCUtils.decapsulate(requestdata);
+	        	
+	        	//execute method
+	        	byte[] returnData = method.invoke(params);
+
+	        	//encapsulate
+	        	rpcreply = RPCUtils.encapsulate(rpcid, returnData);
+	        	
 	        }
 
-		   byte[] replydata = method.invoke(requestdata);
-
-		   replymsg = new Message(replydata);
+		   replymsg = new Message(rpcreply);
 		   
 	       connection.send(replymsg);
 		   

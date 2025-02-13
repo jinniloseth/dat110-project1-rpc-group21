@@ -8,7 +8,7 @@ public class MessageUtils {
 
 	public static final int SEGMENTSIZE = 128;
 
-	public static int MESSAGINGPORT = 8081;
+	public static int MESSAGINGPORT = 8080;
 	public static String MESSAGINGHOST = "localhost";
 
 	public static byte[] encapsulate(Message message) {

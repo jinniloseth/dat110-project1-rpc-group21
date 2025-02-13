@@ -33,12 +33,8 @@ public class RPCClient {
 		// TODO - START
 		// disconnect by closing the underlying messaging connection
 
-		if (connection != null) {
-			connection.close();
-			connection = null; // Prevent reuse of a closed connection
-		} else {
-			System.out.println("RPCClient.disconnect - connection was already null");
-		}
+		connection.close();
+
 		// TODO - END
 	}
 
@@ -49,7 +45,6 @@ public class RPCClient {
 	 * rpcid is the identifier on the server side of the method to be called param
 	 * is the marshalled parameter of the method to be called
 	 */
-
 
 	public byte[] call(byte rpcid, byte[] param) {
 		byte[] returnval = null;
@@ -64,36 +59,16 @@ public class RPCClient {
 		 * message format
 		 * 
 		 */
+		
+		byte[] request = RPCUtils.encapsulate(rpcid, param);
 
-		if (connection == null) {
-	        throw new IllegalStateException("RPCClient: Connection is not established. Call connect() first.");
-	    }
-
-	    // Step 1: Encapsulate the RPC request
-	    byte[] request = RPCUtils.encapsulate(rpcid, param);
-	    System.out.println("DEBUG: Sending request: " + Arrays.toString(request));  // Debug sent data
-
-	    // Step 2: Send the request
-	    connection.send(new Message(request));
-
-	    // Step 3: Receive the response
-	    Message reply = connection.receive();
-	    
-	    // Step 4: Handle potential null reply
-	    if (reply == null || reply.getData() == null) {
-	        throw new IllegalStateException("RPCClient: Received null response from server.");
-	    }
-
-	    System.out.println("DEBUG: Received response: " + Arrays.toString(reply.getData()));  // Debug received data
-
-	    // Step 5: Decapsulate the reply
-	    returnval = RPCUtils.decapsulate(reply.getData());
+		connection.send(new Message(request));
+		
+		returnval = RPCUtils.decapsulate(connection.receive().getData());
 
 		// TODO - END
 
 		return returnval;
 	}
 
-	
-	
 }

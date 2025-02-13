@@ -1,6 +1,7 @@
 package no.hvl.dat110.system.controller;
 
 import no.hvl.dat110.TODO;
+import no.hvl.dat110.messaging.MessageUtils;
 import no.hvl.dat110.rpc.RPCClient;
 import no.hvl.dat110.rpc.RPCClientStopStub;
 
@@ -31,8 +32,13 @@ public class Controller  {
 		// connect to sensor and display RPC servers
 		// read value from sensor using RPC and write to display using RPC
 			
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		RPCClient client = new RPCClient(MessageUtils.MESSAGINGHOST, MessageUtils.MESSAGINGPORT);
+		
+		display = new DisplayStub(client);
+		sensor = new SensorStub(client);
+		
+		displayclient.connect();
+		sensorclient.connect();
 		
 		// TODO - END
 		
